@@ -1,9 +1,20 @@
+from spotify import values
 from spotify.page import Page
 from spotify.v1.artist import ArtistInstance
 
 
 class TrackContext(object):
-    pass
+
+    def __init__(self, version, id):
+        self.version = version
+        self.id = id
+
+    def fetch(self, market=values.UNSET):
+        params = values.of({
+            'market': market
+        })
+        response = self.version.request('GET', '/tracks/{}'.format(self.id), params=params)
+        return TrackInstance(self.version, response.json())
 
 
 class TrackInstance(object):
@@ -70,7 +81,20 @@ class TrackInstance(object):
 
 
 class TrackList(object):
-    pass
+
+    def __init__(self, version):
+        self.version = version
+
+    def get(self, id):
+        return TrackContext(self.version, id)
+
+    def list(self, ids, market=values.UNSET):
+        params = values.of({
+            'ids': ','.join(ids),
+            'market': market
+        })
+        response = self.version.request('GET', '/tracks', params=params)
+        return TrackPage(self.version, response.json(), 'tracks')
 
 
 class TrackPage(Page):

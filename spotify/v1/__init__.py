@@ -2,6 +2,7 @@ from spotify.v1.album import AlbumList
 from spotify.v1.artist import ArtistList
 from spotify.v1.me import MeContext
 from spotify.v1.search import SearchContext
+from spotify.v1.track import TrackList
 
 
 class V1(object):
@@ -14,6 +15,7 @@ class V1(object):
         self._artists = None
         self._me = None
         self._search = None
+        self._tracks = None
 
     def absolute_url(self, uri):
         return self.client.absolute_url('{}{}'.format(self.uri, uri))
@@ -48,3 +50,10 @@ class V1(object):
             self._search = SearchContext(self)
 
         return self._search
+
+    @property
+    def tracks(self):
+        if not self._tracks:
+            self._tracks = TrackList(self)
+
+        return self._tracks
