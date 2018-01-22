@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='spotify',
+    name='spotify-python',
     version='0.0.1',
     author='Jingming Niu',
     author_email='niu@jingming.ca',
