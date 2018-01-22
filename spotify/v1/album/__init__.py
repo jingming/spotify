@@ -1,0 +1,120 @@
+from spotify.object.copyright import Copyright
+from spotify.object.image import Image
+from spotify.page import Page
+from spotify.v1.album.track import TrackList
+from spotify.v1.artist import ArtistPage
+from spotify.v1.track import TrackPage
+
+
+class AlbumContext(object):
+
+    def __init__(self, version, id, market=None):
+        self.version = version
+        self.id = id
+        self.market = market
+
+        self._tracks = None
+
+    def fetch(self):
+        response = self.version.request(
+            'GET',
+            self.version.absolute_url('/albums/{}'.format(self.id))
+        )
+        response.raise_for_status()
+        return AlbumInstance(response.json())
+
+    def tracks(self):
+        if self._tracks is None:
+            self._tracks = TrackList()
+
+        return self._tracks
+
+
+class AlbumInstance(object):
+    def __init__(self, properties):
+        self._properties = properties
+
+    @property
+    def album_type(self):
+        return self._properties['album_type']
+
+    @property
+    def artists(self):
+        return ArtistPage(self._properties['artists'])
+
+    @property
+    def available_markets(self):
+        return self._properties['available_markets']
+
+    @property
+    def copyrights(self):
+        return [Copyright.from_json(copyright) for copyright in self._properties['copyrights']]
+
+    @property
+    def external_ids(self):
+        return self._properties['external_ids']
+
+    @property
+    def external_urls(self):
+        return self._properties['external_urls']
+
+    @property
+    def genres(self):
+        return self._properties['genres']
+
+    @property
+    def images(self):
+        return [Image.from_json(image) for image in self._properties['images']]
+
+    @property
+    def name(self):
+        return self._properties['name']
+
+    @property
+    def popularity(self):
+        return self._properties['popularity']
+
+    @property
+    def release_date(self):
+        return self._properties['release_date']
+
+    @property
+    def release_date_precision(self):
+        return self._properties['release_date_precision']
+
+    @property
+    def tracks(self):
+        return TrackPage(self._properties['tracks'])
+
+    @property
+    def type(self):
+        return self._properties['type']
+
+    @property
+    def uri(self):
+        return self._properties['uri']
+
+
+class AlbumList(object):
+
+    def __init__(self, version):
+        self.version = version
+
+    def get(self, id, market=None):
+        return AlbumContext(self.version, id, market=market)
+
+    def list(self, ids):
+        response = self.version.request(
+            'GET',
+            self.version.absolute_url('/albums'),
+            params=' '.join(ids)
+        )
+        response.raise_for_status()
+        return AlbumPage(self.version, response.json())
+
+
+class AlbumPage(Page):
+    INSTANCE_CLASS = AlbumInstance
+
+    def __init__(self, version, data):
+        super(AlbumPage, self).__init__(version, data, 'albums')
