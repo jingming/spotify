@@ -1,5 +1,7 @@
 from spotify.v1.album import AlbumList
+from spotify.v1.artist import ArtistList
 from spotify.v1.me import MeContext
+from spotify.v1.search import SearchContext
 
 
 class V1(object):
@@ -9,7 +11,9 @@ class V1(object):
         self.uri = '/v1'
 
         self._albums = None
+        self._artists = None
         self._me = None
+        self._search = None
 
     def absolute_url(self, uri):
         return self.client.absolute_url('{}{}'.format(self.uri, uri))
@@ -18,15 +22,29 @@ class V1(object):
         return self.client.request(method, self.absolute_url(uri), params=params, data=data)
 
     @property
-    def me(self):
-        if not self._me:
-            self._me = MeContext(self.client)
-
-        return self._me
-
-    @property
     def albums(self):
         if not self._albums:
             self._albums = AlbumList(self)
 
         return self._albums
+
+    @property
+    def artists(self):
+        if not self._artists:
+            self._artists = ArtistList(self)
+
+        return self._artists
+
+    @property
+    def me(self):
+        if not self._me:
+            self._me = MeContext(self)
+
+        return self._me
+
+    @property
+    def search(self):
+        if not self._search:
+            self._search = SearchContext(self)
+
+        return self._search
