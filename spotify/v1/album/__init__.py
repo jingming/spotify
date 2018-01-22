@@ -2,7 +2,7 @@ from spotify.object.copyright import Copyright
 from spotify.object.image import Image
 from spotify.page import Page
 from spotify.v1.album.track import TrackList
-from spotify.v1.artist import ArtistPage
+from spotify.v1.artist import ArtistPage, ArtistInstance
 from spotify.v1.track import TrackPage
 
 
@@ -20,8 +20,7 @@ class AlbumContext(object):
             'GET',
             self.version.absolute_url('/albums/{}'.format(self.id))
         )
-        response.raise_for_status()
-        return AlbumInstance(response.json())
+        return AlbumInstance(self.version, response.json())
 
     def tracks(self):
         if self._tracks is None:
@@ -31,8 +30,13 @@ class AlbumContext(object):
 
 
 class AlbumInstance(object):
-    def __init__(self, properties):
+    def __init__(self, version, properties):
+        self.version = version
         self._properties = properties
+
+    def refresh(self):
+        response = self.version.request('GET', self.href)
+        self._properties = response.json()
 
     @property
     def album_type(self):
@@ -40,7 +44,7 @@ class AlbumInstance(object):
 
     @property
     def artists(self):
-        return ArtistPage(self._properties['artists'])
+        return [ArtistInstance(self.version, artist) for artist in self._properties['artists']]
 
     @property
     def available_markets(self):
@@ -61,6 +65,14 @@ class AlbumInstance(object):
     @property
     def genres(self):
         return self._properties['genres']
+
+    @property
+    def href(self):
+        return self._properties['href']
+
+    @property
+    def id(self):
+        return self._properties['id']
 
     @property
     def images(self):
@@ -84,7 +96,7 @@ class AlbumInstance(object):
 
     @property
     def tracks(self):
-        return TrackPage(self._properties['tracks'])
+        return TrackPage(self.version, self._properties['tracks'], 'items')
 
     @property
     def type(self):
@@ -107,14 +119,12 @@ class AlbumList(object):
         response = self.version.request(
             'GET',
             self.version.absolute_url('/albums'),
-            params=' '.join(ids)
+            params={
+                'ids': ','.join(ids)
+            }
         )
-        response.raise_for_status()
-        return AlbumPage(self.version, response.json())
+        return AlbumPage(self.version, response.json(), 'albums')
 
 
 class AlbumPage(Page):
     INSTANCE_CLASS = AlbumInstance
-
-    def __init__(self, version, data):
-        super(AlbumPage, self).__init__(version, data, 'albums')
