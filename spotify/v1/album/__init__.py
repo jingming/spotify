@@ -3,7 +3,7 @@ from spotify.object.copyright import Copyright
 from spotify.object.image import Image
 from spotify.page import Page
 from spotify.v1.album.track import TrackList
-from spotify.v1.artist import ArtistPage, ArtistInstance
+from spotify.v1.artist import ArtistInstance
 from spotify.v1.track import TrackPage
 
 

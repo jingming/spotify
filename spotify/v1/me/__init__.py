@@ -1,3 +1,4 @@
+from spotify.object.followers import Followers
 from spotify.object.image import Image
 from spotify.v1.me.player import PlayerContext
 
@@ -54,8 +55,7 @@ class MeInstance(object):
 
     @property
     def followers(self):
-        # TODO: turn this into an object?
-        return self._properties['followers']
+        return Followers.from_json(self._properties['followers'])
 
     @property
     def href(self):
