@@ -1,5 +1,4 @@
 from spotify.page import Page
-from spotify.v1.artist import ArtistInstance
 
 
 class RelatedArtistList(object):
@@ -14,4 +13,8 @@ class RelatedArtistList(object):
 
 
 class RelatedArtistPage(Page):
-    INSTANCE_CLASS = ArtistInstance
+
+    @property
+    def instance_class(self):
+        from spotify.v1.artist import ArtistInstance
+        return ArtistInstance

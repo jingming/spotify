@@ -121,4 +121,7 @@ class ArtistList(object):
 
 
 class ArtistPage(Page):
-    INSTANCE_CLASS = ArtistInstance
+
+    @property
+    def instance_class(self):
+        return ArtistInstance

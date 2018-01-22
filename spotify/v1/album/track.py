@@ -1,6 +1,5 @@
 from spotify import values
 from spotify.page import Page
-from spotify.v1.track import TrackInstance
 
 
 class TrackList(object):
@@ -20,4 +19,8 @@ class TrackList(object):
 
 
 class TrackPage(Page):
-    INSTANCE_CLASS = TrackInstance
+
+    @property
+    def instance_class(self):
+        from spotify.v1.track import TrackInstance
+        return TrackInstance

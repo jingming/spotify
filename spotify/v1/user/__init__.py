@@ -1,5 +1,6 @@
 from spotify.object.followers import Followers
 from spotify.object.image import Image
+from spotify.v1.user.playlist import PlaylistList
 
 
 class UserList(object):

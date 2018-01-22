@@ -44,4 +44,7 @@ class DeviceList(object):
 
 
 class DevicePage(Page):
-    INSTANCE_CLASS = DeviceInstance
+
+    @property
+    def instance_class(self):
+        return DeviceInstance

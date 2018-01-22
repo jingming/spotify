@@ -2,9 +2,7 @@ from spotify import values
 from spotify.object.copyright import Copyright
 from spotify.object.image import Image
 from spotify.page import Page
-from spotify.v1.album.track import TrackList
-from spotify.v1.artist import ArtistInstance
-from spotify.v1.track import TrackPage
+from spotify.v1.album.track import TrackList, TrackPage
 
 
 class AlbumContext(object):
@@ -45,6 +43,7 @@ class AlbumInstance(object):
 
     @property
     def artists(self):
+        from spotify.v1.artist import ArtistInstance
         return [ArtistInstance(self.version, artist) for artist in self._properties['artists']]
 
     @property

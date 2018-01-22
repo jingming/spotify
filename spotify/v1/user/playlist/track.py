@@ -1,8 +1,6 @@
 from spotify import values
 from spotify.object.snapshot import Snapshot
 from spotify.page import Page
-from spotify.v1.track import TrackInstance
-from spotify.v1.user import UserInstance
 
 
 class PlaylistTrackInstance(object):
@@ -17,6 +15,7 @@ class PlaylistTrackInstance(object):
 
     @property
     def added_by(self):
+        from spotify.v1.user import UserInstance
         return UserInstance(self.version, self._properties['added_by'])
 
     @property
@@ -25,6 +24,7 @@ class PlaylistTrackInstance(object):
 
     @property
     def track(self):
+        from spotify.v1.track import TrackInstance
         return TrackInstance(self.version, self._properties['track'])
 
 
@@ -41,7 +41,7 @@ class PlaylistTrackList(object):
             'position': position
         })
         response = self.version.request(
-            'GET',
+            'POST',
             '/users/{}/playlists/{}/tracks'.format(self.user_id, self.playlist_id),
             data=data
         )
@@ -101,4 +101,7 @@ class PlaylistTrackList(object):
 
 
 class PlaylistTrackPage(Page):
-    INSTANCE_CLASS = PlaylistTrackInstance
+
+    @property
+    def instance_class(self):
+        return PlaylistTrackInstance

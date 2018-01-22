@@ -1,3 +1,5 @@
+import json
+
 from spotify.http import HttpClient
 from spotify.v1 import V1
 
@@ -26,12 +28,16 @@ class Client:
             'Authorization': self.auth.auth_string
         }
 
+        if data:
+            headers['Content-Type'] = 'application/json'
+
         response = self.http_client.request(
             method,
             url,
             params=params,
-            data=data,
+            data=json.dumps(data),
             headers=headers
         )
+
         response.raise_for_status()
         return response

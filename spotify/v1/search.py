@@ -1,8 +1,4 @@
 from spotify import values
-from spotify.v1.album import AlbumPage
-from spotify.v1.artist import ArtistPage
-from spotify.v1.user.playlist import PlaylistPage
-from spotify.v1.track import TrackPage
 
 
 class SearchContext(object):
@@ -30,16 +26,20 @@ class SearchInstance(object):
 
     @property
     def albums(self):
+        from spotify.v1.album import AlbumPage
         return AlbumPage(self.version, self._properties.get('albums', []), 'items')
 
     @property
     def artists(self):
+        from spotify.v1.artist import ArtistPage
         return ArtistPage(self.version, self._properties.get('artists', []), 'items')
 
     @property
     def playlists(self):
+        from spotify.v1.user.playlist import PlaylistPage
         return PlaylistPage(self.version, self._properties.get('playlists', []), 'items')
 
     @property
     def tracks(self):
+        from spotify.v1.track import TrackPage
         return TrackPage(self.version, self._properties.get('tracks', []), 'items')

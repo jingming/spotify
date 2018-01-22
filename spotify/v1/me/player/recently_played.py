@@ -1,7 +1,6 @@
 from spotify import values
 from spotify.object.context import Context
 from spotify.page import Page
-from spotify.v1.track import TrackInstance
 
 
 class RecentlyPlayedInstance(object):
@@ -12,6 +11,7 @@ class RecentlyPlayedInstance(object):
 
     @property
     def track(self):
+        from spotify.v1.track import TrackInstance
         return TrackInstance(self._properties['track'])
 
     @property

@@ -1,6 +1,5 @@
 from spotify import values
 from spotify.page import Page
-from spotify.v1.album import AlbumInstance
 
 
 class AlbumList(object):
@@ -21,4 +20,8 @@ class AlbumList(object):
 
 
 class AlbumPage(Page):
-    INSTANCE_CLASS = AlbumInstance
+
+    @property
+    def instance_class(self):
+        from spotify.v1.album import AlbumInstance
+        return AlbumInstance

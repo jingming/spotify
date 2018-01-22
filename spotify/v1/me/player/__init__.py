@@ -4,7 +4,6 @@ from spotify.object.device import Device
 from spotify.v1.me.player.currently_playing import CurrentlyPlayingContext
 from spotify.v1.me.player.device import DeviceList
 from spotify.v1.me.player.recently_played import RecentlyPlayedList
-from spotify.v1.track import TrackInstance
 
 
 class PlayerContext(object):
@@ -143,6 +142,7 @@ class PlayerInstance(object):
 
     @property
     def item(self):
+        from spotify.v1.track import TrackInstance
         return TrackInstance(self.version, self._properties['item'])
 
     @property

@@ -2,7 +2,7 @@ from spotify import values
 from spotify.object.followers import Followers
 from spotify.object.image import Image
 from spotify.page import Page
-from spotify.v1.user import UserInstance
+from spotify.v1.user.playlist.track import PlaylistTrackList, PlaylistTrackPage
 
 
 class PlaylistInstance(object):
@@ -10,6 +10,7 @@ class PlaylistInstance(object):
     def __init__(self, version, properties):
         self.version = version
         self._properties = properties
+        self._context = PlaylistContext(self.version, self.owner.id, self.id)
 
     def refresh(self):
         response = self.version.client.request('GET', self.href)
@@ -49,6 +50,7 @@ class PlaylistInstance(object):
 
     @property
     def owner(self):
+        from spotify.v1.user import UserInstance
         return UserInstance(self.version, self._properties['owner'])
 
     @property
@@ -60,8 +62,12 @@ class PlaylistInstance(object):
         return self._properties['snapshot_id']
 
     @property
+    def tracks_(self):
+        return PlaylistTrackPage(self.version, self._properties['tracks'], 'items')
+
+    @property
     def tracks(self):
-        return PlaylistPage(self.version, self._properties['tracks'], 'items')
+        return self._context.tracks
 
     @property
     def type(self):
@@ -84,7 +90,7 @@ class PlaylistContext(object):
     @property
     def tracks(self):
         if not self._tracks:
-            self._tracks = PlaylistList()
+            self._tracks = PlaylistTrackList(self.version, self.user_id, self.id)
 
         return self._tracks
 
@@ -136,4 +142,7 @@ class PlaylistList(object):
 
 
 class PlaylistPage(Page):
-    INSTANCE_CLASS = PlaylistInstance
+
+    @property
+    def instance_class(self):
+        return PlaylistInstance

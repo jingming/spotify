@@ -19,7 +19,7 @@ class MeContext(object):
 
     def fetch(self):
         response = self.version.request('GET', '/me')
-        return MeInstance(self, response)
+        return MeInstance(self.version, response.json())
 
 
 class MeInstance(object):

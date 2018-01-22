@@ -20,7 +20,7 @@ def authorize_url(client_id=None, redirect_uri=None, state=None, scopes=None, sh
         'client_id': client_id or os.environ.get('SPOTIFY_CLIENT_ID'),
         'redirect_uri': redirect_uri or os.environ.get('SPOTIFY_REDIRECT_URI'),
         'state': state or str(uuid.uuid4()).replace('-', ''),
-        'scopes': ' '.join(scopes) if scopes else '',
+        'scope': ' '.join(scopes) if scopes else '',
         'show_dialog': show_dialog,
         'response_type': 'code'
     }

@@ -1,6 +1,5 @@
 from spotify import values
 from spotify.object.context import Context
-from spotify.v1.track import TrackInstance
 
 
 class CurrentlyPlayingContext(object):
@@ -40,4 +39,5 @@ class CurrentlyPlayingInstance(object):
 
     @property
     def item(self):
+        from spotify.v1.track import TrackInstance
         return TrackInstance(self.version, self._properties['item'])
