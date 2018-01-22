@@ -17,7 +17,7 @@ class MeContext(object):
         return self._player
 
     def fetch(self):
-        response = self.version.request('GET', self.version.absolute_url('/me'))
+        response = self.version.request('GET', '/me')
         return MeInstance(self, response)
 
 
@@ -67,7 +67,7 @@ class MeInstance(object):
 
     @property
     def images(self):
-        return [Image(image) for image in self._properties['image']]
+        return [Image.from_json(image) for image in self._properties['image']]
 
     @property
     def product(self):

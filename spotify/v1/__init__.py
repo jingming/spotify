@@ -14,8 +14,8 @@ class V1(object):
     def absolute_url(self, uri):
         return self.client.absolute_url('{}{}'.format(self.uri, uri))
 
-    def request(self, method, url, params=None, data=None):
-        return self.client.request(method, url, params=params, data=data)
+    def request(self, method, uri, params=None, data=None):
+        return self.client.request(method, self.absolute_url(uri), params=params, data=data)
 
     @property
     def me(self):

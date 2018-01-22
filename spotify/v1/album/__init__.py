@@ -1,3 +1,4 @@
+from spotify import values
 from spotify.object.copyright import Copyright
 from spotify.object.image import Image
 from spotify.page import Page
@@ -8,25 +9,25 @@ from spotify.v1.track import TrackPage
 
 class AlbumContext(object):
 
-    def __init__(self, version, id, market=None):
+    def __init__(self, version, id):
         self.version = version
         self.id = id
-        self.market = market
 
         self._tracks = None
 
-    def fetch(self):
-        response = self.version.request(
-            'GET',
-            self.version.absolute_url('/albums/{}'.format(self.id))
-        )
-        return AlbumInstance(self.version, response.json())
-
+    @property
     def tracks(self):
         if self._tracks is None:
-            self._tracks = TrackList()
+            self._tracks = TrackList(self.version, self.id)
 
         return self._tracks
+
+    def fetch(self, market=values.UNSET):
+        params = values.of({
+            'market': market
+        })
+        response = self.version.request('GET', '/albums/{}'.format(self.id), params=params)
+        return AlbumInstance(self.version, response.json())
 
 
 class AlbumInstance(object):
@@ -35,7 +36,7 @@ class AlbumInstance(object):
         self._properties = properties
 
     def refresh(self):
-        response = self.version.request('GET', self.href)
+        response = self.version.client.request('GET', self.href)
         self._properties = response.json()
 
     @property
@@ -112,17 +113,15 @@ class AlbumList(object):
     def __init__(self, version):
         self.version = version
 
-    def get(self, id, market=None):
-        return AlbumContext(self.version, id, market=market)
+    def get(self, id):
+        return AlbumContext(self.version, id)
 
-    def list(self, ids):
-        response = self.version.request(
-            'GET',
-            self.version.absolute_url('/albums'),
-            params={
-                'ids': ','.join(ids)
-            }
-        )
+    def list(self, ids, market=values.UNSET):
+        params = values.of({
+            'ids': ','.join(ids),
+            'market': market
+        })
+        response = self.version.request('GET', '/albums', params=params)
         return AlbumPage(self.version, response.json(), 'albums')
 
 

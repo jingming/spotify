@@ -8,7 +8,7 @@ class ArtistContext(object):
         self.id = id
 
     def fetch(self):
-        response = self.version.request('GET', '/v1/artists/{}'.format(self.id))
+        response = self.version.request('GET', '/artists/{}'.format(self.id))
         return ArtistInstance(self.version, response.json())
 
 
@@ -19,7 +19,7 @@ class ArtistInstance(object):
         self._properties = properties
 
     def refresh(self):
-        response = self.version.request('GET', self.href)
+        response = self.version.client.request('GET', self.href)
         self._properties = response.json()
 
     @property
@@ -55,13 +55,9 @@ class ArtistList(object):
         return ArtistContext(self.version, id)
 
     def list(self, ids):
-        response = self.version.request(
-            'GET',
-            '/v1/artists',
-            params={
-                'ids': ','.join(ids)
-            }
-        )
+        response = self.version.request('GET', '/artists', params={
+            'ids': ','.join(ids)
+        })
         return ArtistPage(self.version, response.json(), 'artists')
 
 

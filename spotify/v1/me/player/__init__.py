@@ -125,10 +125,6 @@ class PlayerInstance(object):
         self._properties = properties
         self._context = PlayerContext(self.version)
 
-    def refresh(self):
-        response = self.version.request('GET', '/me/player')
-        self._properties = response.json()
-
     @property
     def timestamp(self):
         return self._properties['timestamp']
