@@ -1,5 +1,6 @@
 from spotify.v1.album import AlbumList
 from spotify.v1.artist import ArtistList
+from spotify.v1.audio_analysis import AudioAnalysisList
 from spotify.v1.me import MeContext
 from spotify.v1.search import SearchContext
 from spotify.v1.track import TrackList
@@ -14,6 +15,7 @@ class V1(object):
 
         self._albums = None
         self._artists = None
+        self._audio_analysis = None
         self._me = None
         self._search = None
         self._tracks = None
@@ -38,6 +40,13 @@ class V1(object):
             self._artists = ArtistList(self)
 
         return self._artists
+
+    @property
+    def audio_analysis(self):
+        if not self._audio_analysis:
+            self._audio_analysis = AudioAnalysisList(self)
+
+        return self._audio_analysis
 
     @property
     def me(self):
