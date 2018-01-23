@@ -1,10 +1,8 @@
 from spotify import values
+from spotify.resource import Resource, Instance
 
 
-class SearchContext(object):
-
-    def __init__(self, version):
-        self.version = version
+class SearchContext(Resource):
 
     def get(self, q, types, market=values.UNSET, limit=values.UNSET, offset=values.UNSET):
         params = values.of({
@@ -19,28 +17,24 @@ class SearchContext(object):
         return SearchInstance(self.version, response.json())
 
 
-class SearchInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class SearchInstance(Instance):
 
     @property
     def albums(self):
         from spotify.v1.album import AlbumPage
-        return AlbumPage(self.version, self._properties.get('albums', []), 'items')
+        return AlbumPage(self.version, self.property('albums', []), 'items')
 
     @property
     def artists(self):
         from spotify.v1.artist import ArtistPage
-        return ArtistPage(self.version, self._properties.get('artists', []), 'items')
+        return ArtistPage(self.version, self.property('artists', []), 'items')
 
     @property
     def playlists(self):
         from spotify.v1.user.playlist import PlaylistPage
-        return PlaylistPage(self.version, self._properties.get('playlists', []), 'items')
+        return PlaylistPage(self.version, self.property('playlists', []), 'items')
 
     @property
     def tracks(self):
         from spotify.v1.track import TrackPage
-        return TrackPage(self.version, self._properties.get('tracks', []), 'items')
+        return TrackPage(self.version, self.property('tracks', []), 'items')

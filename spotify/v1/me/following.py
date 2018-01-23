@@ -1,11 +1,9 @@
 from spotify import values
 from spotify.page import Page
+from spotify.resource import Resource
 
 
-class FollowingList(object):
-
-    def __init__(self, version):
-        self.version = version
+class FollowingList(Resource):
 
     def list(self, type, limit=values.UNSET, after=values.UNSET):
         params = values.of({

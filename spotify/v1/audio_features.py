@@ -1,90 +1,86 @@
-from spotify import values
 from spotify.page import Page
+from spotify.resource import Instance, Resource
 
 
-class AudioFeaturesInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class AudioFeaturesInstance(Instance):
 
     @property
     def danceability(self):
-        return self._properties['danceability']
+        return self.property('danceability')
 
     @property
     def energy(self):
-        return self._properties['energy']
+        return self.property('energy')
 
     @property
     def key(self):
-        return self._properties['key']
+        return self.property('key')
 
     @property
     def loudness(self):
-        return self._properties['loudness']
+        return self.property('loudness')
 
     @property
     def mode(self):
-        return self._properties['mode']
+        return self.property('mode')
 
     @property
     def speechiness(self):
-        return self._properties['speechiness']
+        return self.property('speechiness')
 
     @property
     def acousticness(self):
-        return self._properties['acousticness']
+        return self.property('acousticness')
 
     @property
     def instrumentalness(self):
-        return self._properties['instrumentalness']
+        return self.property('instrumentalness')
 
     @property
     def liveness(self):
-        return self._properties['liveness']
+        return self.property('liveness')
 
     @property
     def valence(self):
-        return self._properties['valence']
+        return self.property('valence')
 
     @property
     def tempo(self):
-        return self._properties['tempo']
+        return self.property('tempo')
 
     @property
     def type(self):
-        return self._properties['type']
+        return self.property('type')
 
     @property
     def id(self):
-        return self._properties['id']
+        return self.property('id')
 
     @property
     def uri(self):
-        return self._properties['uri']
+        return self.property('uri')
 
     @property
     def track_href(self):
-        return self._properties['track_href']
+        return self.property('track_href')
 
     @property
     def analysis_url(self):
-        return self._properties['analysis_url']
+        return self.property('analysis_url')
 
     @property
     def duration_ms(self):
-        return self._properties['duration_ms']
+        return self.property('duration_ms')
 
     @property
     def time_signature(self):
-        return self._properties['time_signature']
+        return self.property('time_signature')
 
 
-class AudioFeaturesContext(object):
+class AudioFeaturesContext(Resource):
 
     def __init__(self, version, id):
-        self.version = version
+        super(AudioFeaturesContext, self).__init__(version)
         self.id = id
 
     def fetch(self):
@@ -92,10 +88,7 @@ class AudioFeaturesContext(object):
         return AudioFeaturesInstance(self.version, response.json())
 
 
-class AudioFeaturesList(object):
-
-    def __init__(self, version):
-        self.version = version
+class AudioFeaturesList(Resource):
 
     def list(self, ids=None):
         params = {}

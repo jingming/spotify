@@ -1,10 +1,11 @@
 from spotify.page import Page
+from spotify.resource import Resource
 
 
-class TopTrackList(object):
+class TopTrackList(Resource):
 
     def __init__(self, version, artist_id):
-        self.version = version
+        super(TopTrackList, self).__init__(version)
         self.artist_id = artist_id
 
     def list(self, country):

@@ -1,5 +1,6 @@
 from spotify.object.followers import Followers
 from spotify.object.image import Image
+from spotify.resource import Resource, Instance
 from spotify.v1.me.album import AlbumList
 from spotify.v1.me.following import FollowingList
 from spotify.v1.me.player import PlayerContext
@@ -8,10 +9,10 @@ from spotify.v1.me.top import TopContext
 from spotify.v1.me.track import TrackList
 
 
-class MeContext(object):
+class MeContext(Resource):
 
     def __init__(self, version):
-        self.version = version
+        super(MeContext, self).__init__(version)
 
         self._albums = None
         self._following = None
@@ -67,64 +68,59 @@ class MeContext(object):
         return MeInstance(self.version, response.json())
 
 
-class MeInstance(object):
+class MeInstance(Instance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+        super(MeInstance, self).__init__(version, properties)
         self._context = MeContext(self.version)
-
-    def refresh(self):
-        response = self.version.request('GET', self.href)
-        self._properties = response.json()
 
     @property
     def birthdate(self):
-        return self._properties['birthdate']
+        return self.property('birthdate')
 
     @property
     def country(self):
-        return self._properties['country']
+        return self.property('country')
 
     @property
     def display_name(self):
-        return self._properties['display_name']
+        return self.property('display_name')
 
     @property
     def email(self):
-        return self._properties['email']
+        return self.property('email')
 
     @property
     def external_urls(self):
-        return self._properties['external_urls']
+        return self.property('external_urls')
 
     @property
     def followers(self):
-        return Followers.from_json(self._properties['followers'])
+        return Followers.from_json(self.property('followers'))
 
     @property
     def href(self):
-        return self._properties['href']
+        return self.property('href')
 
     @property
     def id(self):
-        return self._properties['id']
+        return self.property('id')
 
     @property
     def images(self):
-        return [Image.from_json(image) for image in self._properties['image']]
+        return [Image.from_json(image) for image in self.property('image')]
 
     @property
     def product(self):
-        return self._properties['product']
+        return self.property('product')
 
     @property
     def type(self):
-        return self._properties['type']
+        return self.property('type')
 
     @property
     def uri(self):
-        return self._properties['uri']
+        return self.property('uri')
 
     @property
     def albums(self):

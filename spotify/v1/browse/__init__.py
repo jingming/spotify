@@ -1,11 +1,12 @@
+from spotify.resource import Resource
 from spotify.v1.browse.featured_playlist import FeaturedPlaylistContext
 from spotify.v1.browse.new_release import NewReleaseList
 
 
-class BrowseContext(object):
+class BrowseContext(Resource):
 
     def __init__(self, version):
-        self.version = version
+        super(BrowseContext, self).__init__(version)
 
         self._featured_playlists = None
         self._new_releases = None

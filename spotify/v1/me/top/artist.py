@@ -1,11 +1,9 @@
 from spotify import values
 from spotify.page import Page
+from spotify.resource import Resource
 
 
-class ArtistList(object):
-
-    def __init__(self, version):
-        self.version = version
+class ArtistList(Resource):
 
     def list(self, limit=values.UNSET, offset=values.UNSET, time_range=values.UNSET):
         params = values.of({

@@ -1,15 +1,16 @@
 from spotify.object.followers import Followers
 from spotify.object.image import Image
 from spotify.page import Page
+from spotify.resource import Resource, UpgradableInstance
 from spotify.v1.artist.album import AlbumList
 from spotify.v1.artist.related_artist import RelatedArtistList
 from spotify.v1.artist.top_track import TopTrackList
 
 
-class ArtistContext(object):
+class ArtistContext(Resource):
 
     def __init__(self, version, id):
-        self.version = version
+        super(ArtistContext, self).__init__(version)
         self.id = id
 
         self._albums = None
@@ -42,56 +43,47 @@ class ArtistContext(object):
         return ArtistInstance(self.version, response.json())
 
 
-class ArtistInstance(object):
+class ArtistInstance(UpgradableInstance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+        super(ArtistInstance, self).__init__(version, properties)
         self._context = ArtistContext(self.version, self.id)
-
-    def refresh(self):
-        response = self.version.client.request('GET', self.href)
-        self._properties = response.json()
 
     @property
     def external_urls(self):
-        return self._properties['external_urls']
+        return self.property('external_urls')
 
     @property
     def followers(self):
-        return Followers.from_json(self._properties['followers'])
+        return Followers.from_json(self.property('followers'))
 
     @property
     def genres(self):
-        return self._properties['genres']
-
-    @property
-    def href(self):
-        return self._properties['href']
+        return self.property('genres')
 
     @property
     def id(self):
-        return self._properties['id']
+        return self.property('id')
 
     @property
     def images(self):
-        return [Image.from_json(image) for image in self._properties['images']]
+        return [Image.from_json(image) for image in self.property('images')]
 
     @property
     def name(self):
-        return self._properties['name']
+        return self.property('name')
 
     @property
     def popularity(self):
-        return self._properties['popularity']
+        return self.property('popularity')
 
     @property
     def type(self):
-        return self._properties['type']
+        return self.property('type')
 
     @property
     def uri(self):
-        return self._properties['uri']
+        return self.property('uri')
 
     @property
     def albums(self):
@@ -106,9 +98,7 @@ class ArtistInstance(object):
         return self._context.related_artists
 
 
-class ArtistList(object):
-    def __init__(self, version):
-        self.version = version
+class ArtistList(Resource):
 
     def get(self, id):
         return ArtistContext(self.version, id)

@@ -1,11 +1,12 @@
 from spotify.object.device import Device
 from spotify.page import Page
+from spotify.resource import Resource
 
 
-class DeviceInstance(object):
+class DeviceInstance(Resource):
 
     def __init__(self, version, properties):
-        self.version = version
+        super(DeviceInstance, self).__init__(version)
         self._device = Device.from_json(properties)
 
     @property
@@ -33,10 +34,7 @@ class DeviceInstance(object):
         return self._device.volume_percent
 
 
-class DeviceList(object):
-
-    def __init__(self, version):
-        self.version = version
+class DeviceList(Resource):
 
     def list(self):
         response = self.version.request('GET', '/me/player/devices')

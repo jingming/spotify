@@ -1,11 +1,9 @@
 from spotify import values
 from spotify.object.context import Context
+from spotify.resource import Resource, Instance
 
 
-class CurrentlyPlayingContext(object):
-
-    def __init__(self, version):
-        self.version = version
+class CurrentlyPlayingContext(Resource):
 
     def fetch(self, market=values.UNSET):
         params = values.of({
@@ -15,29 +13,25 @@ class CurrentlyPlayingContext(object):
         return CurrentlyPlayingInstance(self.version, response.json())
 
 
-class CurrentlyPlayingInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class CurrentlyPlayingInstance(Instance):
 
     @property
     def context(self):
-        return Context(self._properties['context'])
+        return Context(self.property('context'))
 
     @property
     def timestamp(self):
-        return self._properties['timestamp']
+        return self.property('timestamp')
 
     @property
     def progress_ms(self):
-        return self._properties['progress_ms']
+        return self.property('progress_ms')
 
     @property
     def is_playing(self):
-        return self._properties('is_playing')
+        return self.property('is_playing')
 
     @property
     def item(self):
         from spotify.v1.track import TrackInstance
-        return TrackInstance(self.version, self._properties['item'])
+        return TrackInstance(self.version, self.property('item'))

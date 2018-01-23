@@ -1,9 +1,10 @@
+from spotify.resource import Resource
 
 
-class ImageList(object):
+class ImageList(Resource):
 
     def __init__(self, version, user_id, playlist_id):
-        self.version = version
+        super(ImageList, self).__init__(version)
         self.user_id = user_id
         self.playlist_id = playlist_id
 

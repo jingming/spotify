@@ -1,26 +1,20 @@
 from spotify import values
+from spotify.resource import Instance, Resource
 
 
-class FeaturedPlaylistInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class FeaturedPlaylistInstance(Instance):
 
     @property
     def message(self):
-        return self._properties['message']
+        return self.property('message')
 
     @property
     def playlists(self):
         from spotify.v1.user.playlist import PlaylistPage
-        return PlaylistPage(self.version, self._properties['playlists'], 'items')
+        return PlaylistPage(self.version, self.property('playlists'), 'items')
 
 
-class FeaturedPlaylistContext(object):
-
-    def __init__(self, version):
-        self.version = version
+class FeaturedPlaylistContext(Resource):
 
     def fetch(self, locale=values.UNSET, country=values.UNSET, timestamp=values.UNSET,
               limit=values.UNSET, offset=values.UNSET):

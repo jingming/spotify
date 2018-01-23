@@ -1,32 +1,26 @@
 from spotify import values
 from spotify.object.context import Context
 from spotify.page import Page
+from spotify.resource import Instance, Resource
 
 
-class RecentlyPlayedInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class RecentlyPlayedInstance(Instance):
 
     @property
     def track(self):
         from spotify.v1.track import TrackInstance
-        return TrackInstance(self.version, self._properties['track'])
+        return TrackInstance(self.version, self.property('track'))
 
     @property
     def played_at(self):
-        return self._properties['played_at']
+        return self.property('played_at')
 
     @property
     def context(self):
-        return Context.from_json(self._properties['context'])
+        return Context.from_json(self.property('context'))
 
 
-class RecentlyPlayedList(object):
-
-    def __init__(self, version):
-        self.version = version
+class RecentlyPlayedList(Resource):
 
     def list(self, limit=values.UNSET, after=values.UNSET, before=values.UNSET):
         params = values.of({

@@ -2,78 +2,70 @@ from spotify import values
 from spotify.object.followers import Followers
 from spotify.object.image import Image
 from spotify.page import Page
+from spotify.resource import UpgradableInstance, Resource
 from spotify.v1.user.playlist.follower import FollowerList
 from spotify.v1.user.playlist.image import ImageList
 from spotify.v1.user.playlist.track import PlaylistTrackList, PlaylistTrackPage
 
 
-class PlaylistInstance(object):
+class PlaylistInstance(UpgradableInstance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+        super(PlaylistInstance, self).__init__(version, properties)
         self._context = PlaylistContext(self.version, self.owner.id, self.id)
-
-    def refresh(self):
-        response = self.version.client.request('GET', self.href)
-        self._properties = response.json()
 
     @property
     def collaborative(self):
-        return self._properties['collaborative']
+        return self.property('collaborative')
 
     @property
     def description(self):
-        return self._properties['description']
+        return self.property('description')
 
     @property
     def external_urls(self):
-        return self._properties['external_urls']
+        return self.property('external_urls')
 
     @property
     def followers(self):
-        return Followers.from_json(self._properties['followers'])
-
-    @property
-    def href(self):
-        return self._properties['href']
+        return Followers.from_json(self.property('followers'))
 
     @property
     def id(self):
-        return self._properties['id']
+        return self.property('id')
 
     @property
     def images(self):
-        return [Image.from_json(image) for image in self._properties['images']]
+        return [Image.from_json(image) for image in self.property('images')]
 
     @property
     def name(self):
-        return self._properties['name']
+        return self.property('name')
 
     @property
     def owner(self):
         from spotify.v1.user import UserInstance
-        return UserInstance(self.version, self._properties['owner'])
+        return UserInstance(self.version, self.property('owner'))
 
     @property
     def public(self):
-        return self._properties['public']
+        return self.property('public')
 
     @property
     def snapshot_id(self):
-        return self._properties['snapshot_id']
+        return self.property('snapshot_id')
 
     @property
     def tracks_(self):
-        return PlaylistTrackPage(self.version, self._properties['tracks'], 'items')
+        return PlaylistTrackPage(self.version, self.property('tracks'), 'items')
 
     @property
     def type(self):
-        return self._properties['type']
+        return self.property('type')
 
     @property
     def uri(self):
-        return self._properties['uri']
+        return self.property('uri')
 
     @property
     def tracks(self):
@@ -92,10 +84,10 @@ class PlaylistInstance(object):
         return self._context.unfollow
 
 
-class PlaylistContext(object):
+class PlaylistContext(Resource):
 
     def __init__(self, version, user_id, id):
-        self.version = version
+        super(PlaylistContext, self).__init__(version)
         self.user_id = user_id
         self.id = id
 
@@ -161,10 +153,10 @@ class PlaylistContext(object):
         return response.status_code == 200
 
 
-class PlaylistList(object):
+class PlaylistList(Resource):
 
     def __init__(self, version, user_id):
-        self.version = version
+        super(PlaylistList, self).__init__(version)
         self.user_id = user_id
 
     def create(self, name, public=values.UNSET, collaborative=values.UNSET, description=values.UNSET):

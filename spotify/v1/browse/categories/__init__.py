@@ -1,41 +1,41 @@
 from spotify import values
 from spotify.object.image import Image
 from spotify.page import Page
+from spotify.resource import Instance, Resource
 from spotify.v1.browse.categories.playlist import PlaylistList
 
 
-class CategoryInstance(object):
+class CategoryInstance(Instance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
-        self._context = CategoryContext(self.version)
+        super(CategoryInstance, self).__init__(version, properties)
+        self._context = CategoryContext(self.version, self.id)
 
     @property
     def href(self):
-        return self._properties['href']
+        return self.property('href')
 
     @property
     def icons(self):
-        return [Image.from_json(icon) for icon in self._properties['icons']]
+        return [Image.from_json(icon) for icon in self.property('icons')]
 
     @property
     def id(self):
-        return self._properties['id']
+        return self.property('id')
 
     @property
     def name(self):
-        return self._properties['name']
+        return self.property('name')
 
     @property
     def playlists(self):
         return self._context.playlists
 
 
-class CategoryContext(object):
+class CategoryContext(Resource):
 
     def __init__(self, version, id):
-        self.version = version
+        super(CategoryContext, self).__init__(version)
         self.id = id
 
         self._playlists = None
@@ -43,7 +43,7 @@ class CategoryContext(object):
     @property
     def playlists(self):
         if not self._playlists:
-            self._playlists = PlaylistList(self.version)
+            self._playlists = PlaylistList(self.version, self.id)
 
         return self._playlists
 
@@ -52,10 +52,10 @@ class CategoryContext(object):
         return CategoryInstance(self.version, response.json())
 
 
-class CategoryList(object):
+class CategoryList(Resource):
 
     def __init__(self, version):
-        self.version = version
+        super(CategoryList, self).__init__(version)
 
     def list(self, country=values.UNSET, locale=values.UNSET, limit=values.UNSET, offset=values.UNSET):
         params = values.of({

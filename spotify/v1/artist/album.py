@@ -1,11 +1,12 @@
 from spotify import values
 from spotify.page import Page
+from spotify.resource import Resource
 
 
-class AlbumList(object):
+class AlbumList(Resource):
 
     def __init__(self, version, artist_id):
-        self.version = version
+        super(AlbumList, self).__init__(version)
         self.artist_id = artist_id
 
     def list(self, album_type=values.UNSET, market=values.UNSET, limit=values.UNSET, offset=values.UNSET):

@@ -1,7 +1,7 @@
 from spotify import values
 from spotify.object.seed import Seed
+from spotify.resource import Resource, Instance
 from spotify.v1.recommendation.available_genre_seeds import AvailableGenreSeedsContext
-from spotify.v1.track import TrackInstance
 
 
 class Attributes(object):
@@ -46,30 +46,30 @@ class Attributes(object):
         return payload
 
 
-class RecommendationInstance(object):
+class RecommendationInstance(Instance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+        super(RecommendationInstance, self).__init__(version, properties)
         self._context = RecommendationContext(self.version)
 
     @property
     def seeds(self):
-        return [Seed.from_json(seed) for seed in self._properties['seeds']]
+        return [Seed.from_json(seed) for seed in self.property('seeds')]
 
     @property
     def tracks(self):
-        return [TrackInstance(self.version, track) for track in self._properties['tracks']]
+        from spotify.v1.track import TrackInstance
+        return [TrackInstance(self.version, track) for track in self.property('tracks')]
 
     @property
     def available_genre_seeds(self):
         return self._context.available_genre_seeds
 
 
-class RecommendationContext(object):
+class RecommendationContext(Resource):
 
     def __init__(self, version):
-        self.version = version
+        super(RecommendationContext, self).__init__(version)
 
         self._available_genre_seeds = None
 

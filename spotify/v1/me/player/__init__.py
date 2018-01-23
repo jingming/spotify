@@ -1,15 +1,16 @@
 from spotify import values
 from spotify.object.context import Context
 from spotify.object.device import Device
+from spotify.resource import Resource, Instance
 from spotify.v1.me.player.currently_playing import CurrentlyPlayingContext
 from spotify.v1.me.player.device import DeviceList
 from spotify.v1.me.player.recently_played import RecentlyPlayedList
 
 
-class PlayerContext(object):
+class PlayerContext(Resource):
 
     def __init__(self, version):
-        self.version = version
+        super(PlayerContext, self).__init__(version)
 
         self._currently_playing = None
         self._devices = None
@@ -117,45 +118,44 @@ class PlayerContext(object):
         return response.status_code == 204
 
 
-class PlayerInstance(object):
+class PlayerInstance(Instance):
 
     def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+        super(PlayerInstance, self).__init__(version, properties)
         self._context = PlayerContext(self.version)
 
     @property
     def timestamp(self):
-        return self._properties['timestamp']
+        return self.property('timestamp')
 
     @property
     def device(self):
-        return Device.from_json(self._properties['device'])
+        return Device.from_json(self.property('device'))
 
     @property
     def progress_ms(self):
-        return self._properties['progress_ms']
+        return self.property('progress_ms')
 
     @property
     def is_playing(self):
-        return self._properties['is_playing']
+        return self.property('is_playing')
 
     @property
     def item(self):
         from spotify.v1.track import TrackInstance
-        return TrackInstance(self.version, self._properties['item'])
+        return TrackInstance(self.version, self.property('item'))
 
     @property
     def shuffle_state(self):
-        return self._properties['shuffle_state']
+        return self.property('shuffle_state')
 
     @property
     def repeat_state(self):
-        return self._properties['repeat_state']
+        return self.property('repeat_state')
 
     @property
     def context(self):
-        return Context.from_json(self._properties['context'])
+        return Context.from_json(self.property('context'))
 
     @property
     def currently_playing(self):

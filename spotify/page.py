@@ -1,10 +1,10 @@
+from spotify.resource import Resource
 
 
-class Page(object):
+class Page(Resource):
 
     def __init__(self, version, data, key):
-        self.version = version
-
+        super(Page, self).__init__(version)
         self.items = [self.instance_class(self.version, item) for item in data.get(key, [])]
 
     @property

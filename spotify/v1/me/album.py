@@ -1,27 +1,21 @@
 from spotify import values
 from spotify.page import Page
+from spotify.resource import Instance, Resource
 
 
-class SavedAlbum(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class SavedAlbum(Instance):
 
     @property
     def added_at(self):
-        return self._properties['added_at']
+        return self.property('added_at')
 
     @property
     def album(self):
         from spotify.v1.album import AlbumInstance
-        return AlbumInstance(self.version, self._properties['album'])
+        return AlbumInstance(self.version, self.property('album'))
 
 
-class AlbumList(object):
-
-    def __init__(self, version):
-        self.version = version
+class AlbumList(Resource):
 
     def list(self, limit=values.UNSET, offset=values.UNSET, market=values.UNSET):
         params = values.of({

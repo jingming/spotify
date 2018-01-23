@@ -1,45 +1,42 @@
 from spotify.object.audio_analysis import Bar, Beat, Meta, Section, Segment, Tatum, Track
+from spotify.resource import Instance, Resource
 
 
-class AudioAnalysisInstance(object):
-
-    def __init__(self, version, properties):
-        self.version = version
-        self._properties = properties
+class AudioAnalysisInstance(Instance):
 
     @property
     def bars(self):
-        return [Bar.from_json(bar) for bar in self._properties['bars']]
+        return [Bar.from_json(bar) for bar in self.property('bars')]
 
     @property
     def beats(self):
-        return [Beat.from_json(beat) for beat in self._properties['beats']]
+        return [Beat.from_json(beat) for beat in self.property('beats')]
 
     @property
     def meta(self):
-        return Meta.from_json(self._properties['meta'])
+        return Meta.from_json(self.property('meta'))
 
     @property
     def sections(self):
-        return [Section.from_json(section) for section in self._properties['sections']]
+        return [Section.from_json(section) for section in self.property('sections')]
 
     @property
     def segments(self):
-        return [Segment.from_json(segment) for segment in self._properties['segments']]
+        return [Segment.from_json(segment) for segment in self.property('segments')]
 
     @property
     def tatums(self):
-        return [Tatum.from_json(tatum) for tatum in self._properties['tatum']]
+        return [Tatum.from_json(tatum) for tatum in self.property('tatum')]
 
     @property
     def track(self):
-        return Track.from_json(self._properties['track'])
+        return Track.from_json(self.property('track'))
 
 
-class AudioAnalysisContext(object):
+class AudioAnalysisContext(Resource):
 
     def __init__(self, version, id):
-        self.version = version
+        super(AudioAnalysisContext, self).__init__(version)
         self.id = id
 
     def fetch(self):
@@ -47,10 +44,7 @@ class AudioAnalysisContext(object):
         return AudioAnalysisInstance(self.version, response.json())
 
 
-class AudioAnalysisList(object):
-
-    def __init__(self, version):
-        self.version = version
+class AudioAnalysisList(Resource):
 
     def get(self, id):
         return AudioAnalysisContext(self.version, id)
