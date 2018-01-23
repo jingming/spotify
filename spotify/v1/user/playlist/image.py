@@ -11,6 +11,9 @@ class ImageList(object):
         response = self.version.requset(
             'POST',
             '/users/{}/playlists/{}/images'.format(self.user_id, self.playlist_id),
-            data=image
+            data=image,
+            headers={
+                'Content-Type': 'image/jpeg'
+            }
         )
         return response.status_code == 202

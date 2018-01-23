@@ -1,6 +1,8 @@
 from spotify.v1.album import AlbumList
 from spotify.v1.artist import ArtistList
 from spotify.v1.audio_analysis import AudioAnalysisList
+from spotify.v1.audio_features import AudioFeaturesList
+from spotify.v1.browse import BrowseContext
 from spotify.v1.me import MeContext
 from spotify.v1.search import SearchContext
 from spotify.v1.track import TrackList
@@ -16,6 +18,8 @@ class V1(object):
         self._albums = None
         self._artists = None
         self._audio_analysis = None
+        self._audio_features = None
+        self._browse = None
         self._me = None
         self._search = None
         self._tracks = None
@@ -47,6 +51,20 @@ class V1(object):
             self._audio_analysis = AudioAnalysisList(self)
 
         return self._audio_analysis
+
+    @property
+    def audio_features(self):
+        if not self._audio_features:
+            self._audio_features = AudioFeaturesList(self)
+
+        return self._audio_features
+
+    @property
+    def browse(self):
+        if not self._browse:
+            self._browse = BrowseContext(self)
+
+        return self._browse
 
     @property
     def me(self):
