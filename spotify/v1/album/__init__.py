@@ -125,4 +125,7 @@ class AlbumList(object):
 
 
 class AlbumPage(Page):
-    INSTANCE_CLASS = AlbumInstance
+
+    @property
+    def instance_class(self):
+        return AlbumInstance

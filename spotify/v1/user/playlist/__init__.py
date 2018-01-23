@@ -2,6 +2,8 @@ from spotify import values
 from spotify.object.followers import Followers
 from spotify.object.image import Image
 from spotify.page import Page
+from spotify.v1.user.playlist.follower import FollowerList
+from spotify.v1.user.playlist.image import ImageList
 from spotify.v1.user.playlist.track import PlaylistTrackList, PlaylistTrackPage
 
 
@@ -66,16 +68,24 @@ class PlaylistInstance(object):
         return PlaylistTrackPage(self.version, self._properties['tracks'], 'items')
 
     @property
-    def tracks(self):
-        return self._context.tracks
-
-    @property
     def type(self):
         return self._properties['type']
 
     @property
     def uri(self):
         return self._properties['uri']
+
+    @property
+    def followers(self):
+        return self._context.followers
+
+    @property
+    def images(self):
+        return self._context.images
+
+    @property
+    def tracks(self):
+        return self._context.tracks
 
 
 class PlaylistContext(object):
@@ -85,7 +95,23 @@ class PlaylistContext(object):
         self.user_id = user_id
         self.id = id
 
+        self._followers = None
+        self._images = None
         self._tracks = None
+
+    @property
+    def followers(self):
+        if not self._followers:
+            self._followers = FollowerList(self.version, self.user_id, self.id)
+
+        return self._followers
+
+    @property
+    def images(self):
+        if not self._images:
+            self._images = ImageList(self.version, self.user_id, self.id)
+
+        return self._images
 
     @property
     def tracks(self):
@@ -110,6 +136,24 @@ class PlaylistContext(object):
             'description': description
         })
         response = self.version.request('PUT', '/users/{}/playlists/{}'.format(self.user_id, self.id), data=data)
+        return response.status_code == 200
+
+    def unfollow(self):
+        response = self.version.request(
+            'DELETE',
+            '/users/{}/playlists/{}/followers'.format(self.user_id, self.id)
+        )
+        return response.status_code == 200
+
+    def follow(self, public=values.UNSET):
+        data = values.of({
+            'public': public
+        })
+        response = self.version.request(
+            'PUT',
+            '/users/{}/playlists/{}/followers'.format(self.user_id, self.id),
+            data=data
+        )
         return response.status_code == 200
 
 
