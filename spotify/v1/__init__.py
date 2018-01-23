@@ -4,6 +4,7 @@ from spotify.v1.audio_analysis import AudioAnalysisList
 from spotify.v1.audio_features import AudioFeaturesList
 from spotify.v1.browse import BrowseContext
 from spotify.v1.me import MeContext
+from spotify.v1.recommendation import RecommendationContext
 from spotify.v1.search import SearchContext
 from spotify.v1.track import TrackList
 from spotify.v1.user import UserList
@@ -21,6 +22,7 @@ class V1(object):
         self._audio_features = None
         self._browse = None
         self._me = None
+        self._recommendations = None
         self._search = None
         self._tracks = None
         self._users = None
@@ -72,6 +74,13 @@ class V1(object):
             self._me = MeContext(self)
 
         return self._me
+
+    @property
+    def recommendations(self):
+        if not self._recommendations:
+            self._recommendations = RecommendationContext(self)
+
+        return self._recommendations
 
     @property
     def search(self):
