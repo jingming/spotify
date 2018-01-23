@@ -9,6 +9,7 @@ class CategoryInstance(object):
     def __init__(self, version, properties):
         self.version = version
         self._properties = properties
+        self._context = CategoryContext(self.version)
 
     @property
     def href(self):
@@ -25,6 +26,10 @@ class CategoryInstance(object):
     @property
     def name(self):
         return self._properties['name']
+
+    @property
+    def playlists(self):
+        return self._context.playlists
 
 
 class CategoryContext(object):

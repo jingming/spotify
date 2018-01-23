@@ -97,10 +97,11 @@ class AudioFeaturesList(object):
     def __init__(self, version):
         self.version = version
 
-    def list(self, ids=values.UNSET):
-        params = values.of({
-            'ids': ','.join(ids)
-        })
+    def list(self, ids=None):
+        params = {}
+        if ids:
+            params['ids'] = ','.join(ids)
+
         response = self.version.request('GET', '/audio-features', params=params)
         return AudioFeaturesPage(self.version, response.json(), 'audio_features')
 

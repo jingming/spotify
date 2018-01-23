@@ -70,3 +70,7 @@ class UserInstance(object):
     @property
     def uri(self):
         return self._properties['uri']
+
+    @property
+    def playlists(self):
+        return self._context.playlists

@@ -14,6 +14,7 @@ class SearchContext(object):
             'limit': limit,
             'offset': offset
         })
+
         response = self.version.request('GET', '/search', params=params)
         return SearchInstance(self.version, response.json())
 

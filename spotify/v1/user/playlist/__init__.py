@@ -76,16 +76,20 @@ class PlaylistInstance(object):
         return self._properties['uri']
 
     @property
-    def followers(self):
-        return self._context.followers
-
-    @property
-    def images(self):
-        return self._context.images
-
-    @property
     def tracks(self):
         return self._context.tracks
+
+    @property
+    def update(self):
+        return self._context.update
+
+    @property
+    def follow(self):
+        return self._context.follow
+
+    @property
+    def unfollow(self):
+        return self._context.unfollow
 
 
 class PlaylistContext(object):

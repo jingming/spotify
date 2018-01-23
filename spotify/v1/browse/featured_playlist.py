@@ -22,8 +22,8 @@ class FeaturedPlaylistContext(object):
     def __init__(self, version):
         self.version = version
 
-    def get(self, locale=values.UNSET, country=values.UNSET, timestamp=values.UNSET,
-            limit=values.UNSET, offset=values.UNSET):
+    def fetch(self, locale=values.UNSET, country=values.UNSET, timestamp=values.UNSET,
+              limit=values.UNSET, offset=values.UNSET):
         params = values.of({
             'locale': locale,
             'country': country,

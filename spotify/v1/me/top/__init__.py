@@ -1,3 +1,5 @@
+from spotify.v1.me.top.artist import ArtistList
+from spotify.v1.me.top.track import TrackList
 
 
 class TopContext(object):

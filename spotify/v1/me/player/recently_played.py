@@ -12,7 +12,7 @@ class RecentlyPlayedInstance(object):
     @property
     def track(self):
         from spotify.v1.track import TrackInstance
-        return TrackInstance(self._properties['track'])
+        return TrackInstance(self.version, self._properties['track'])
 
     @property
     def played_at(self):
@@ -39,4 +39,7 @@ class RecentlyPlayedList(object):
 
 
 class RecentlyPlayedPage(Page):
-    INSTANCE_CLASS = RecentlyPlayedInstance
+
+    @property
+    def instance_class(self):
+        return RecentlyPlayedInstance

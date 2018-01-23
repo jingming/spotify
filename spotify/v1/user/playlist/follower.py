@@ -1,4 +1,3 @@
-from spotify import values
 
 
 class FollowerList(object):
@@ -8,10 +7,11 @@ class FollowerList(object):
         self.user_id = user_id
         self.playlist_id = playlist_id
 
-    def contains(self, ids=values.UNSET):
-        params = values.of({
-            'ids': ids
-        })
+    def contains(self, ids=None):
+        params = {}
+        if ids:
+            params['ids'] = ','.join(ids)
+
         response = self.version.request(
             'GET',
             '/users/{}/playlists/{}/followers/contains'.format(self.user_id, self.playlist_id),

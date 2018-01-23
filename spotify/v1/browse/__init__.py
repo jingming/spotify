@@ -24,5 +24,3 @@ class BrowseContext(object):
             self._new_releases = NewReleaseList(self.version)
 
         return self._new_releases
-
-    
