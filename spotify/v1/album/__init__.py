@@ -9,6 +9,12 @@ from spotify.v1.album.track import TrackList, TrackPage
 class AlbumContext(Resource):
 
     def __init__(self, version, id):
+        """
+        Album context
+
+        :param V1 version: Spotify API Version
+        :param str id: Album id
+        """
         super(AlbumContext, self).__init__(version)
         self.id = id
 
@@ -16,12 +22,24 @@ class AlbumContext(Resource):
 
     @property
     def tracks(self):
+        """
+        Tracks list context
+
+        :return: Tracks list context
+        """
         if self._tracks is None:
             self._tracks = TrackList(self.version, self.id)
 
         return self._tracks
 
     def fetch(self, market=values.UNSET):
+        """
+        Fetch the album metadata
+
+        :param str market: Market locale
+        :return: Fetched album instance
+        :rtype: AlbumInstance
+        """
         params = values.of({
             'market': market
         })
@@ -100,9 +118,24 @@ class AlbumInstance(UpgradableInstance):
 class AlbumList(Resource):
 
     def get(self, id):
+        """
+        Get the Album context
+
+        :param str id: ID of the album
+        :return: Album context
+        :rtype: AlbumContext
+        """
         return AlbumContext(self.version, id)
 
     def list(self, ids, market=values.UNSET):
+        """
+        List albums
+
+        :param List[str] ids: List of albums ids
+        :param str market: Market locale
+        :return: Page of Albums
+        :rtype: AlbumPage
+        """
         params = values.of({
             'ids': ','.join(ids),
             'market': market
@@ -115,4 +148,9 @@ class AlbumPage(Page):
 
     @property
     def instance_class(self):
+        """
+        Returns the AlbumInstance class
+
+        :return: AlbumInstance class
+        """
         return AlbumInstance

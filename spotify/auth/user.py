@@ -8,13 +8,14 @@ def authorize_url(client_id=None, redirect_uri=None, state=None, scopes=None, sh
     """
     Trigger authorization dialog
 
-    :param client_id: Client ID
-    :param redirect_uri: Application Redirect URI
-    :param state: Application State
-    :param scopes: Scopes to request
-    :param show_dialog: Show the dialog
+    :param str client_id: Client ID
+    :param str redirect_uri: Application Redirect URI
+    :param str state: Application State
+    :param List[str] scopes: Scopes to request
+    :param bool show_dialog: Show the dialog
     :param http_client: HTTP Client for requests
     :return str Authorize URL
+    :rtype str
     """
     params = {
         'client_id': client_id or os.environ.get('SPOTIFY_CLIENT_ID'),
@@ -38,9 +39,9 @@ class User(object):
 
         :param str code: Auth token code
         :param bool auto_refresh: Refresh the token upon expiration
-        :param client_id: Client ID
-        :param client_secret: Client Secret
-        :param redirect_uri: Application Redirect URI
+        :param str client_id: Client ID
+        :param str client_secret: Client Secret
+        :param str redirect_uri: Application Redirect URI
         :param http_client: HTTP Client for requests
         """
         self.code = code
@@ -51,10 +52,16 @@ class User(object):
         self.http_client = http_client or HttpClient()
 
         self._token = None
-        """ :type : Token """
 
     @property
     def auth_string(self):
+        """
+        Get the auth string. If token is expired and auto refresh enabled,
+        a new token will be fetched
+
+        :return: the auth string
+        :rtype: str
+        """
         if not self._token:
             self.execute()
 
@@ -68,6 +75,9 @@ class User(object):
         raise TokenExpired()
 
     def refresh(self):
+        """
+        Refresh the access token
+        """
         data = {
             'grant_type': 'refresh_token',
             'refresh_token': self._token.refresh_token
@@ -78,6 +88,9 @@ class User(object):
         self._token = Token.from_json(response.json())
 
     def execute(self):
+        """
+        Fetch the access token
+        """
         data = {
             'grant_type': 'authorization_code',
             'code': self.code,

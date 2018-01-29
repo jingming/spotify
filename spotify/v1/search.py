@@ -22,19 +22,19 @@ class SearchInstance(Instance):
     @property
     def albums(self):
         from spotify.v1.album import AlbumPage
-        return AlbumPage(self.version, self.property('albums', []), 'items')
+        return AlbumPage(self.version, self.property('albums', {}), 'items')
 
     @property
     def artists(self):
         from spotify.v1.artist import ArtistPage
-        return ArtistPage(self.version, self.property('artists', []), 'items')
+        return ArtistPage(self.version, self.property('artists', {}), 'items')
 
     @property
     def playlists(self):
         from spotify.v1.user.playlist import PlaylistPage
-        return PlaylistPage(self.version, self.property('playlists', []), 'items')
+        return PlaylistPage(self.version, self.property('playlists', {}), 'items')
 
     @property
     def tracks(self):
         from spotify.v1.track import TrackPage
-        return TrackPage(self.version, self.property('tracks', []), 'items')
+        return TrackPage(self.version, self.property('tracks', {}), 'items')
