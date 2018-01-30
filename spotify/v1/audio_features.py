@@ -98,6 +98,9 @@ class AudioFeaturesList(Resource):
         response = self.version.request('GET', '/audio-features', params=params)
         return AudioFeaturesPage(self.version, response.json(), 'audio_features')
 
+    def get(self, id):
+        return AudioFeaturesContext(self.version, id)
+
 
 class AudioFeaturesPage(Page):
 

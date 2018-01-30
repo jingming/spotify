@@ -67,6 +67,9 @@ class CategoryList(Resource):
         response = self.version.request('GET', '/browse/categories', params=params)
         return CategoryPage(self.version, response.json()['categories'], 'items')
 
+    def get(self, id):
+        return CategoryContext(self.version, id)
+
 
 class CategoryPage(Page):
 

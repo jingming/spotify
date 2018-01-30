@@ -1,4 +1,5 @@
 from spotify.resource import Resource
+from spotify.v1.browse.categories import CategoryList
 from spotify.v1.browse.featured_playlist import FeaturedPlaylistContext
 from spotify.v1.browse.new_release import NewReleaseList
 
@@ -25,3 +26,10 @@ class BrowseContext(Resource):
             self._new_releases = NewReleaseList(self.version)
 
         return self._new_releases
+
+    @property
+    def categories(self):
+        if not self._categories:
+            self._categories = CategoryList(self.version)
+
+        return self._categories
